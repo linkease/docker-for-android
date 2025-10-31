@@ -87,7 +87,7 @@ scripts/update_arm64_bin.sh
 现在把安装软件下载到电脑上，再用 adb 推送到设备上：
 * adb connect IP:5555
 * adb root
-* adb push ./install-doker-arm64 /data/local/
+* adb push ./install-docker-arm64 /data/local/
 * adb shell
 
 到 shell 里面运行：/data/local/install-docker-arm64
