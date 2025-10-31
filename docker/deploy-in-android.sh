@@ -90,13 +90,13 @@ echo "[4/4] 启动 Docker 服务..."
 . "$DOCKER_ROOT/docker.env"
 
 # 启动 supervisor（会启动 dockerd 和 kspeeder）
-if [ -f "$DOCKER_ROOT/start.sh" ]; then
+if [ -f "$DOCKER_ROOT/start-dockerd.sh" ]; then
     echo "✓ 正在启动 Docker 服务..."
-    nohup sh "$DOCKER_ROOT/start.sh" > /dev/null 2>&1 &
+    nohup sh "$DOCKER_ROOT/start-dockerd.sh" > /dev/null 2>&1 &
     DOCKERD_PID=$!
     echo "✓ Docker 服务已启动 (PID: $DOCKERD_PID)"
 else
-    echo "✗ 错误: start.sh 文件不存在"
+    echo "✗ 错误: start-dockerd.sh 文件不存在"
     exit 1
 fi
 

@@ -315,7 +315,7 @@ func TestRealServerExtractAndVerifyStructure(t *testing.T) {
 	}
 
 	// 检查脚本文件
-	scripts := []string{"start.sh", "deploy-in-android.sh", "docker.sh"}
+	scripts := []string{"start-dockerd.sh", "deploy-in-android.sh", "docker.sh"}
 	for _, script := range scripts {
 		scriptPath := filepath.Join(dockerDir, script)
 		if _, err := os.Stat(scriptPath); err == nil {
@@ -344,7 +344,7 @@ func TestRealServerExtractAndVerifyStructure(t *testing.T) {
 	t.Logf("        ├── bin/ (或 arm64_bin/)")
 	t.Logf("        ├── etc/")
 	t.Logf("        ├── scripts/")
-	t.Logf("        ├── start.sh")
+	t.Logf("        ├── start-dockerd.sh")
 	t.Logf("        ├── deploy-in-android.sh")
 	t.Logf("        └── docker.env")
 }

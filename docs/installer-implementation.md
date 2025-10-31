@@ -169,7 +169,7 @@ Android 设备:
 ├── etc/                       # 配置文件
 ├── scripts/                   # 脚本
 ├── deploy-in-android.sh       # 部署脚本
-├── start.sh                   # 启动脚本
+├── start-dockerd.sh           # 启动脚本
 └── docker.env                 # 环境变量
 
 /mnt/media_rw/xxx/             # 外置硬盘（DISK_ROOT）

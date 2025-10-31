@@ -123,7 +123,7 @@ cd /data/local/tmp
 │   └── ...
 ├── etc/                     # 配置文件
 ├── deploy-in-android.sh     # 部署脚本
-├── start.sh                 # 启动脚本
+├── start-dockerd.sh         # 启动脚本
 └── docker.env               # 环境变量
 
 /mnt/media_rw/xxx/           # 硬盘挂载点
