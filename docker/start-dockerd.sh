@@ -8,6 +8,10 @@ if [ -z "$DISK_ROOT" ]; then
     exit 1
 fi
 
+# TODO why ?
+# Force sleep 30s
+sleep 30
+
 # Wait up to 60s for DOCKER_DATA_ROOT to appear
 WAIT_TIMEOUT=60
 WAIT_INTERVAL=2
