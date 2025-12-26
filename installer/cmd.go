@@ -11,6 +11,45 @@ import (
 	"time"
 )
 
+const (
+	ext4Magic           = 0xEF53
+	internalStoragePath = "/data/local/docker-storage"
+)
+
+// ensureDiskRoot 准备并检查磁盘根路径
+// - 确保目录存在
+// - 提示文件系统类型（非 ext4 时给出警告）
+func ensureDiskRoot(path string) (string, error) {
+	root := strings.TrimSpace(path)
+	if root == "" {
+		return "", fmt.Errorf("磁盘路径为空")
+	}
+
+	if err := os.MkdirAll(root, 0755); err != nil {
+		return "", fmt.Errorf("创建目录失败: %v", err)
+	}
+
+	var stat syscall.Statfs_t
+	if err := syscall.Statfs(root, &stat); err != nil {
+		return "", fmt.Errorf("无法获取文件系统信息: %v", err)
+	}
+
+	if stat.Type != ext4Magic {
+		fmt.Printf("⚠ 警告: %s 的文件系统类型为 0x%x（非 ext4），Docker 可能无法正常运行\n", root, stat.Type)
+	}
+
+	return root, nil
+}
+
+// promptYesNo 简单的 Y/N 交互
+func promptYesNo(message string) bool {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print(message)
+	text, _ := reader.ReadString('\n')
+	answer := strings.ToLower(strings.TrimSpace(text))
+	return answer == "y" || answer == "yes"
+}
+
 // getDiskSize 获取指定路径的磁盘大小（KB）
 func getDiskSize(path string) (uint64, error) {
 	var stat syscall.Statfs_t
@@ -62,7 +101,23 @@ func detectDiskMount() (string, error) {
 		}
 	}
 	if bestMount == "" {
-		return "", fmt.Errorf("未检测到硬盘挂载点")
+		fmt.Println("⚠ 未检测到外置 ext4 硬盘")
+		useInternal := promptYesNo("是否使用内置存储 /data/local/docker-storage 继续安装? (y/N): ")
+		if !useInternal {
+			return "", fmt.Errorf("未检测到硬盘挂载点")
+		}
+
+		confirm := promptYesNo("请确认使用 /data/local/docker-storage 作为存储目录，可能有空间限制，继续吗? (y/N): ")
+		if !confirm {
+			return "", fmt.Errorf("已取消使用内置存储，请接入外置硬盘后重试")
+		}
+
+		if root, err := ensureDiskRoot(internalStoragePath); err == nil {
+			fmt.Printf("⚠ 使用内置存储: %s\n", root)
+			return root, nil
+		}
+
+		return "", fmt.Errorf("无法准备内置存储路径: %s", internalStoragePath)
 	}
 	return bestMount, nil
 }

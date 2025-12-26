@@ -38,8 +38,7 @@ func main() {
 	diskRoot, err := detectDiskMount()
 	if err != nil {
 		fmt.Printf("✗ 错误: %v\n", err)
-		fmt.Println("✗ Docker 需要 ext4 格式的外置硬盘才能运行")
-		fmt.Println("✗ 请确保已接入并格式化硬盘后再运行此程序")
+		fmt.Println("✗ 默认需要 ext4 外置硬盘，也可在提示时选择使用 /data/local/docker-storage 继续")
 		os.Exit(1)
 	}
 	fmt.Printf("✓ 检测到硬盘挂载点: %s\n", diskRoot)
